@@ -50,8 +50,20 @@ if sentence:
     # Calculate the ranking
     difficulty_index = difficulty_levels.index(difficulty)
     better_than_percentage = sum(counts[:difficulty_index])
+    top_percent = 100 - better_than_percentage
     st.subheader("Your Ranking")
-    st.write(f"You are better than **{better_than_percentage}%** of all users with this difficulty level.")
+    st.write(f"You belong to the top **{top_percent}%** of all users with this difficulty level.")
+
+    # Fun facts for each level
+    fun_facts = {
+        'A1': "Fun fact: Even Einstein had to start somewhere!",
+        'A2': "Fun fact: You're now better than most tourists!",
+        'B1': "Fun fact: You're officially conversational!",
+        'B2': "Fun fact: You can enjoy French movies without subtitles!",
+        'C1': "Fun fact: Your French is better than most expats!",
+        'C2': "Fun fact: You're at the mastery level, like a true Parisian!"
+    }
+    st.write(fun_facts[difficulty])
 
     # Add source information
     st.markdown("""
@@ -91,4 +103,5 @@ st.markdown("""
 ---
 Developed by Igor Dallemagne and Alex Pinel.
 """)
+
 
