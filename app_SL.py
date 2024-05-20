@@ -16,18 +16,19 @@ def reset_input():
 st.title("Sentence Difficulty Prediction")
 st.markdown("""
 Welcome to the Sentence Difficulty Prediction app. 
-This tool predicts the difficulty level of a given sentence using a pre-trained machine learning model.
+This tool predicts the difficulty level of a given french sentence using a pre-trained machine learning model.
 """)
 
-# Input sentence
+# Check if 'sentence' exists in session_state
 if "sentence" not in st.session_state:
     st.session_state["sentence"] = ""
 
+# Input sentence
 sentence = st.text_input("Enter a sentence to predict its difficulty level:", key="sentence")
 
 # Button to reset the input
 if st.button("Reset"):
-    reset_input()
+    st.session_state["sentence"] = ""
 
 # Perform prediction
 if sentence:
