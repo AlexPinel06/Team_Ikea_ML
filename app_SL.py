@@ -9,14 +9,14 @@ vectorizer = joblib.load('model2/tfidf_vectorizer.pkl')
 label_encoder = joblib.load('model2/label_encoder.pkl')
 
 # App title and description
-st.title("Prédiction de la Difficulté des Phrases")
+st.title("Sentence Difficulty Prediction")
 st.markdown("""
-Bienvenue sur l'application de prédiction de la difficulté des phrases.
-Cet outil prédit le niveau de difficulté d'une phrase donnée en utilisant un modèle d'apprentissage automatique pré-entraîné.
+Welcome to the Sentence Difficulty Prediction app. 
+This tool predicts the difficulty level of a given sentence using a pre-trained machine learning model.
 """)
 
 # Input sentence
-sentence = st.text_input("Entrez une phrase pour prédire son niveau de difficulté :")
+sentence = st.text_input("Enter a sentence to predict its difficulty level:")
 
 # Perform prediction
 if sentence:
@@ -25,42 +25,70 @@ if sentence:
     difficulty = label_encoder.inverse_transform(prediction)[0]
 
     # Display the predicted difficulty
-    st.subheader("Résultat de la Prédiction")
-    st.write(f"Le niveau de difficulté prédit pour la phrase est : **{difficulty}**")
+    st.subheader("Prediction Result")
+    st.write(f"The predicted difficulty level for the sentence is: **{difficulty}**")
 
-    # Sample data for illustration (replace with actual data if available)
+    # Estimated data for illustration
     difficulty_levels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
-    counts = [15, 20, 25, 20, 10, 10]  # Example counts for each difficulty level
+    counts = [30, 25, 20, 15, 7, 3]  # Estimated percentage for each difficulty level
 
     # Display a pie chart of difficulty levels
-    st.subheader("Répartition des Niveaux de Difficulté")
-    fig, ax = plt.subplots()
-    ax.pie(counts, labels=difficulty_levels, autopct='%1.1f%%', startangle=90, colors=plt.cm.Paired.colors)
+    st.subheader("Estimated Distribution of French Learners by Competency Level")
+    fig, ax = plt.subplots(facecolor='#0e1117')  # Set the background color of the figure
+    wedges, texts, autotexts = ax.pie(counts, labels=difficulty_levels, autopct='%1.1f%%', startangle=90, colors=plt.cm.Paired.colors)
     ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+
+    # Customize the appearance
+    for text in texts:
+        text.set_color('white')
+    for autotext in autotexts:
+        autotext.set_color('white')
+    fig.patch.set_facecolor('#0e1117')  # Set the background color of the plot area
+
     st.pyplot(fig)
 
     # Display ranking information
     total_sentences = sum(counts)
     user_count = counts[difficulty_levels.index(difficulty)]
     user_percentile = (user_count / total_sentences) * 100
-    st.subheader("Votre Classement")
-    st.write(f"Vous faites partie des **{user_percentile:.1f}%** des utilisateurs ayant ce niveau de difficulté.")
+    st.subheader("Your Ranking")
+    st.write(f"You are in the top **{user_percentile:.1f}%** of all users with this difficulty level.")
+
+    # Add source information
+    st.markdown("""
+    **Sources:**
+    - Portal (CECR)
+    - French Together – Learn French
+    - Service-Public
+    - Kwiziq French
+    - FluentU
+    **Note:** These percentages are based on general estimates and information available on the distribution of language proficiency levels according to the CEFR in various educational and linguistic sources.
+    """)
 
 # Add a sidebar with additional information
-st.sidebar.title("À Propos")
+st.sidebar.title("About")
 st.sidebar.info("""
-Cette application utilise un modèle de régression logistique pour prédire le niveau de difficulté des phrases.
-Le modèle a été entraîné sur un ensemble de données de phrases étiquetées par niveaux de difficulté.
+This app uses a Logistic Regression model to predict the difficulty level of sentences.
+The model was trained on a dataset of sentences labeled with difficulty levels.
 """)
 st.sidebar.title("Instructions")
 st.sidebar.info("""
-1. Entrez une phrase dans la zone de texte.
-2. L'application prédira le niveau de difficulté de la phrase.
-3. Consultez la répartition des niveaux de difficulté et voyez où vous vous situez.
+1. Enter a sentence in the text box.
+2. The app will predict the difficulty level of the sentence.
+3. View the distribution of difficulty levels and see where you rank.
+""")
+
+# Add extra information in the sidebar
+st.sidebar.title("Fun Facts")
+st.sidebar.info("""
+- A1 is the beginner level, while C2 is the mastery level.
+- Difficulty prediction can help in language learning by tailoring content to your level.
+- Natural Language Processing (NLP) techniques are used to analyze and understand human language.
+- Logistic Regression is a simple yet powerful model for classification tasks.
 """)
 
 # Footer
 st.markdown("""
 ---
-Développé par **[Votre Nom]**.
+Developed by Igor Dallemagne and Alex Pinel.
 """)
