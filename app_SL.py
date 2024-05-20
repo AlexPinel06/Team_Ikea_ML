@@ -23,15 +23,18 @@ This tool predicts the difficulty level of a given french sentence using a pre-t
 if "sentence" not in st.session_state:
     st.session_state["sentence"] = ""
 
-# Input sentence
-sentence = st.text_input("Enter a sentence to predict its difficulty level:", key="sentence")
+# Create a form for the sentence input
+with st.form(key='sentence_form'):
+    sentence = st.text_input("Enter a sentence to predict its difficulty level:", key="sentence")
+    submit_button = st.form_submit_button(label='Submit')
 
 # Button to reset the input
 if st.button("Reset"):
     st.session_state["sentence"] = ""
+    st.experimental_rerun()
 
 # Perform prediction
-if sentence:
+if submit_button and sentence:
     X_tfidf = vectorizer.transform([sentence])
     prediction = model.predict(X_tfidf)
     difficulty = label_encoder.inverse_transform(prediction)[0]
