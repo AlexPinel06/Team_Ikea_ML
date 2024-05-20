@@ -8,6 +8,10 @@ model = joblib.load('model2/logistic_regression_model.pkl')
 vectorizer = joblib.load('model2/tfidf_vectorizer.pkl')
 label_encoder = joblib.load('model2/label_encoder.pkl')
 
+# Function to reset the input
+def reset_input():
+    st.session_state["sentence"] = ""
+
 # App title and description
 st.title("Sentence Difficulty Prediction")
 st.markdown("""
@@ -16,7 +20,14 @@ This tool predicts the difficulty level of a given french sentence using a pre-t
 """)
 
 # Input sentence
-sentence = st.text_input("Enter a sentence to predict its difficulty level:")
+if "sentence" not in st.session_state:
+    st.session_state["sentence"] = ""
+
+sentence = st.text_input("Enter a sentence to predict its difficulty level:", value=st.session_state["sentence"])
+
+# Button to reset the input
+if st.button("Reset"):
+    reset_input()
 
 # Perform prediction
 if sentence:
@@ -103,5 +114,6 @@ st.markdown("""
 ---
 Developed by Igor Dallemagne and Alex Pinel.
 """)
+
 
 
