@@ -12,7 +12,7 @@ label_encoder = joblib.load('model2/label_encoder.pkl')
 st.title("Sentence Difficulty Prediction")
 st.markdown("""
 Welcome to the Sentence Difficulty Prediction app. 
-This tool predicts the difficulty level of a given sentence using a pre-trained machine learning model.
+This tool predicts the difficulty level of a given french sentence using a pre-trained machine learning model.
 """)
 
 # Input sentence
