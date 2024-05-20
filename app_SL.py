@@ -47,12 +47,11 @@ if sentence:
 
     st.pyplot(fig)
 
-    # Display ranking information
-    total_sentences = sum(counts)
-    user_count = counts[difficulty_levels.index(difficulty)]
-    user_percentile = (user_count / total_sentences) * 100
+    # Calculate the ranking
+    difficulty_index = difficulty_levels.index(difficulty)
+    better_than_percentage = sum(counts[:difficulty_index])
     st.subheader("Your Ranking")
-    st.write(f"You are in the top **{user_percentile:.1f}%** of all users with this difficulty level.")
+    st.write(f"You are better than **{better_than_percentage}%** of all users with this difficulty level.")
 
     # Add source information
     st.markdown("""
@@ -92,3 +91,4 @@ st.markdown("""
 ---
 Developed by Igor Dallemagne and Alex Pinel.
 """)
+
