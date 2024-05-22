@@ -207,7 +207,7 @@ if st.button("Submit"):
         'C1': "Fun fact: Your French is better than most expats!",
         'C2': "Fun fact: You're at the mastery level, like a true Parisian!"
     }
-    st.write(fun_facts[difficulty])
+    st.write(fun_facts[level])
 
     # Add source information
     st.markdown("""
