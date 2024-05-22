@@ -51,6 +51,16 @@ given_sentences = [
 correct_levels = ['A1', 'A2', 'B1', 'B2', 'C1']
 difficulty_levels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
 
+# Example sentences for each level
+example_sentences = {
+    'A1': "Je m'appelle Marie.",
+    'A2': "J'aime le chocolat.",
+    'B1': "Je vais à l'université en bus.",
+    'B2': "La technologie moderne révolutionne notre quotidien.",
+    'C1': "L'innovation est essentielle pour la compétitivité des entreprises.",
+    'C2': "La théorie des cordes est une perspective fascinante de la physique moderne."
+}
+
 # User answers
 user_answers = []
 correct_answers = correct_levels + correct_levels[:5]
@@ -62,8 +72,10 @@ for i, sentence in enumerate(given_sentences):
 
 # Last 5 questions: Write sentences for given difficulty levels
 st.subheader("Write a sentence for each given difficulty level:")
+user_written_sentences = []
 for level in difficulty_levels[:5]:
     user_sentence = st.text_input(f"Write a sentence for level {level}:")
+    user_written_sentences.append(user_sentence)
     if user_sentence:
         X_tfidf = vectorizer.transform([user_sentence])
         prediction = model.predict(X_tfidf)
@@ -82,6 +94,19 @@ if st.button("Submit"):
             st.write(f"Question {i+1}: Correct! {user_answer} ✅")
         else:
             st.write(f"Question {i+1}: Incorrect! {user_answer} ❌ (Correct: {correct_answer})")
+
+    st.subheader("Analysis of Your Written Sentences")
+    for i, (user_sentence, level) in enumerate(zip(user_written_sentences, difficulty_levels[:5])):
+        if user_sentence:
+            X_tfidf = vectorizer.transform([user_sentence])
+            prediction = model.predict(X_tfidf)
+            predicted_level = label_encoder.inverse_transform(prediction)[0]
+            example_sentence = example_sentences[level]
+            if predicted_level == level:
+                st.write(f"Sentence {i+6}: Correct! Predicted Level: {predicted_level} ✅")
+            else:
+                st.write(f"Sentence {i+6}: Incorrect! Predicted Level: {predicted_level} ❌ (Expected Level: {level})")
+            st.write(f"Example sentence for level {level}: {example_sentence}")
 
 # Button to reset the input
 if st.button("Reset"):
