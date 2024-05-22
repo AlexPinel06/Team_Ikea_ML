@@ -5,10 +5,8 @@ from transformers import CamembertTokenizer, CamembertForSequenceClassification
 import numpy as np
 
 # Load the model, tokenizer, and label encoder
-model = CamembertForSequenceClassification.from_pretrained('camembert-base')
-model.load_state_dict(torch.load('model/trained_model.pt'))
-model.eval()
-tokenizer = CamembertTokenizer.from_pretrained('camembert-base')
+model = joblib.load('model2/logistic_regression_model.pkl')
+vectorizer = joblib.load('model2/tfidf_vectorizer.pkl')
 label_encoder = joblib.load('model2/label_encoder.pkl')
 
 # Function to reset the input
