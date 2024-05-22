@@ -11,7 +11,11 @@ label_encoder = joblib.load('model2/label_encoder.pkl')
 
 # Function to reset the input
 def reset_input():
-    st.session_state.clear()
+    if "random_questions" in st.session_state:
+        del st.session_state["random_questions"]
+    if "random_levels" in st.session_state:
+        del st.session_state["random_levels"]
+    st.session_state["user_written_sentences"] = [""] * 6
     st.experimental_rerun()
 
 # Function to calculate the score
@@ -35,6 +39,9 @@ if "random_questions" not in st.session_state:
 
 if "random_levels" not in st.session_state:
     st.session_state["random_levels"] = []
+
+if "user_written_sentences" not in st.session_state:
+    st.session_state["user_written_sentences"] = [""] * 6
 
 # Questions and correct answers
 given_sentences = [
@@ -88,9 +95,10 @@ for i, sentence in enumerate(given_sentences):
 # Last 6 questions: Write sentences for given difficulty levels
 st.subheader("Write a sentence for each given difficulty level:")
 user_written_sentences = []
-for level in random_levels:
-    user_sentence = st.text_input(f"Write a sentence for level {level}:")
+for i, level in enumerate(random_levels):
+    user_sentence = st.text_input(f"Write a sentence for level {level}:", value=st.session_state["user_written_sentences"][i], key=f"user_sentence_{i}")
     user_written_sentences.append(user_sentence)
+    st.session_state["user_written_sentences"][i] = user_sentence
     if user_sentence:
         X_tfidf = vectorizer.transform([user_sentence])
         prediction = model.predict(X_tfidf)
