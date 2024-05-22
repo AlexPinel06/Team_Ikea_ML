@@ -16,7 +16,7 @@ def reset_input():
 st.title("Sentence Difficulty Prediction")
 st.markdown("""
 Welcome to the Sentence Difficulty Prediction app. 
-This tool predicts the difficulty level of a given French sentence using a pre-trained Logistic Regression model.
+This tool predicts the difficulty level of a given French sentence using a pre-trained camemBERT model.
 """)
 
 # Check if 'sentence' exists in session_state
@@ -112,7 +112,7 @@ if submit_button and st.session_state["sentence"]:
 # Add a sidebar with additional information
 st.sidebar.title("About")
 st.sidebar.info("""
-This app uses a Logistic Regression model to predict the difficulty level of sentences.
+This app uses a camemBERT model to predict the difficulty level of sentences.
 The model was trained on a dataset of sentences labeled with difficulty levels.
 """)
 st.sidebar.title("Instructions")
@@ -128,7 +128,7 @@ st.sidebar.info("""
 - A1 is the beginner level, while C2 is the mastery level.
 - Difficulty prediction can help in language learning by tailoring content to your level.
 - Natural Language Processing (NLP) techniques are used to analyze and understand human language.
-- Logistic Regression is a simple yet powerful model for classification tasks.
+- camemBERT is a state-of-the-art model for sequence classification tasks.
 """)
 
 # Footer
