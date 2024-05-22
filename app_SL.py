@@ -95,7 +95,7 @@ if submit_button and st.session_state["sentence"]:
 # Add a sidebar with additional information
 st.sidebar.title("About")
 st.sidebar.info("""
-This app uses a Logistic Regression model to predict the difficulty level of sentences.
+This app uses a CamemBERT model to predict the difficulty level of sentences.
 The model was trained on a dataset of sentences labeled with difficulty levels.
 """)
 st.sidebar.title("Instructions")
@@ -111,7 +111,7 @@ st.sidebar.info("""
 - A1 is the beginner level, while C2 is the mastery level.
 - Difficulty prediction can help in language learning by tailoring content to your level.
 - Natural Language Processing (NLP) techniques are used to analyze and understand human language.
-- Logistic Regression is a simple yet powerful model for classification tasks.
+- CamemBERT is a state-of-the-art model for sequence classification tasks.
 """)
 
 # Footer
