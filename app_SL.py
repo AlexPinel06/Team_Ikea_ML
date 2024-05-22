@@ -168,9 +168,9 @@ if st.button("Submit"):
                 st.write(f"Sentence {i+7}: Incorrect! Predicted Level: {predicted_level} ❌ (Expected Level: {level})")
             st.write(f"Example sentence for level {level}: {example_sentence}")
 
-    # Display the predicted difficulty
+    # Display the French level
     st.subheader("Your French Level")
-    st.write(f"The predicted difficulty level for the sentence is: **{level}**")
+    st.write(f"Your French level based on your score is: **{level}**")
 
     # Estimated data for illustration
     difficulty_levels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
