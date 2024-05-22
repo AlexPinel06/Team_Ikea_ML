@@ -250,7 +250,7 @@ st.sidebar.title("Instructions")
 st.sidebar.info("""
 1. Select the difficulty level for each of the first 6 sentences.
 2. Write a sentence for each of the last 6 difficulty levels.
-3. Submit your answers to see your score.
+3. Submit your answers to see your score (and get more fun facts :)).
 """)
 
 # Add extra information in the sidebar
