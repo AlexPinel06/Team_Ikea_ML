@@ -30,6 +30,21 @@ def update_scores(new_score):
     if len(st.session_state["scores"]) > 3:
         st.session_state["scores"] = st.session_state["scores"][-3:]
 
+# Determine the level based on the score
+def get_level(score):
+    if 1 <= score <= 2:
+        return 'A1'
+    elif 3 <= score <= 4:
+        return 'A2'
+    elif 5 <= score <= 6:
+        return 'B1'
+    elif 7 <= score <= 8:
+        return 'B2'
+    elif 9 <= score <= 10:
+        return 'C1'
+    else:
+        return 'C2'
+
 # Initialize session state
 if "scores" not in st.session_state:
     st.session_state["scores"] = []
@@ -67,6 +82,16 @@ example_sentences = {
     'B2': "La technologie moderne révolutionne notre quotidien.",
     'C1': "L'innovation est essentielle pour la compétitivité des entreprises.",
     'C2': "La théorie des cordes est une perspective fascinante de la physique moderne."
+}
+
+# YouTube videos for each level
+youtube_videos = {
+    'A1': "https://www.youtube.com/watch?v=4w6REQGQ89E",
+    'A2': "https://www.youtube.com/watch?v=dh7O5BV47lU",
+    'B1': "https://www.youtube.com/watch?v=CwXjunivNbk",
+    'B2': "https://www.youtube.com/watch?v=8J76QTENZv4",
+    'C1': "https://www.youtube.com/shorts/4jZE6y-uGJQ",
+    'C2': "https://www.youtube.com/watch?v=rRgTKrp1hVc"
 }
 
 # Randomize questions and levels if not already randomized
@@ -111,6 +136,32 @@ if st.button("Submit"):
     update_scores(score)
     st.write(f"Your score is: {score}/12")
     
+    level = get_level(score)
+    st.write(f"Your level is: {level}")
+
+    # Display the predicted difficulty
+    st.subheader("Prediction Result")
+    st.write(f"The predicted difficulty level for the sentence is: **{level}**")
+
+    # Estimated data for illustration
+    difficulty_levels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
+    counts = [30, 25, 20, 15, 7, 3]  # Estimated percentage for each difficulty level
+
+    # Display a pie chart of difficulty levels
+    st.subheader("Estimated Distribution of French Learners by Competency Level")
+    fig, ax = plt.subplots(facecolor='#0e1117')  # Set the background color of the figure
+    wedges, texts, autotexts = ax.pie(counts, labels=difficulty_levels, autopct='%1.1f%%', startangle=90, colors=plt.cm.Paired.colors)
+    ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+
+    # Customize the appearance
+    for text in texts:
+        text.set_color('white')
+    for autotext in autotexts:
+        autotext.set_color('white')
+    fig.patch.set_facecolor('#0e1117')  # Set the background color of the plot area
+
+    st.pyplot(fig)
+
     st.subheader("Your Answers")
     for i, (user_answer, correct_answer) in enumerate(zip(user_answers[:6], correct_answers[:6])):
         if user_answer == correct_answer:
@@ -130,6 +181,10 @@ if st.button("Submit"):
             else:
                 st.write(f"Sentence {i+7}: Incorrect! Predicted Level: {predicted_level} ❌ (Expected Level: {level})")
             st.write(f"Example sentence for level {level}: {example_sentence}")
+
+    # Display the corresponding YouTube video
+    st.subheader("Watch a video for your level")
+    st.video(youtube_videos[level])
 
 # Button to reset the input
 if st.button("Reset"):
