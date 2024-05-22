@@ -13,6 +13,7 @@ label_encoder = joblib.load('model2/label_encoder.pkl')
 def reset_input():
     st.session_state["scores"] = []
     st.session_state["random_questions"] = []
+    st.session_state["random_levels"] = []
 
 # Function to calculate the score
 def calculate_score(user_answers, correct_answers):
@@ -32,6 +33,9 @@ if "scores" not in st.session_state:
 
 if "random_questions" not in st.session_state:
     st.session_state["random_questions"] = []
+
+if "random_levels" not in st.session_state:
+    st.session_state["random_levels"] = []
 
 # Questions and correct answers
 given_sentences = [
@@ -59,19 +63,23 @@ example_sentences = {
     'C2': "La théorie des cordes est une perspective fascinante de la physique moderne."
 }
 
-# Randomize questions if not already randomized
+# Randomize questions and levels if not already randomized
 if not st.session_state["random_questions"]:
     combined = list(zip(given_sentences, correct_levels))
     random.shuffle(combined)
     st.session_state["random_questions"] = combined[:6]  # Select 6 random questions
 
+if not st.session_state["random_levels"]:
+    st.session_state["random_levels"] = random.sample(difficulty_levels, 6)
+
 random_questions = st.session_state["random_questions"]
 given_sentences = [q[0] for q in random_questions]
 correct_levels = [q[1] for q in random_questions]
+random_levels = st.session_state["random_levels"]
 
 # User answers
 user_answers = []
-correct_answers = correct_levels + correct_levels[:6]
+correct_answers = correct_levels + random_levels
 
 # First 6 questions: Select difficulty level for given sentences
 st.subheader("Select the difficulty level for the given sentences:")
@@ -81,7 +89,7 @@ for i, sentence in enumerate(given_sentences):
 # Last 6 questions: Write sentences for given difficulty levels
 st.subheader("Write a sentence for each given difficulty level:")
 user_written_sentences = []
-for level in difficulty_levels[:6]:
+for level in random_levels:
     user_sentence = st.text_input(f"Write a sentence for level {level}:")
     user_written_sentences.append(user_sentence)
     if user_sentence:
@@ -104,13 +112,16 @@ if st.button("Submit"):
             st.write(f"Question {i+1}: Incorrect! {user_answer} ❌ (Correct: {correct_answer})")
 
     st.subheader("Analysis of Your Written Sentences")
-    for i, (user_sentence, level) in enumerate(zip(user_written_sentences, difficulty_levels[:6])):
+    for i, (user_sentence, level) in enumerate(zip(user_written_sentences, random_levels)):
         if user_sentence:
             X_tfidf = vectorizer.transform([user_sentence])
             prediction = model.predict(X_tfidf)
             predicted_level = label_encoder.inverse_transform(prediction)[0]
             example_sentence = example_sentences[level]
-            st.write(f"Sentence {i+7}: Predicted Level: {predicted_level}")
+            if predicted_level == level:
+                st.write(f"Sentence {i+7}: Correct! Predicted Level: {predicted_level} ✅")
+            else:
+                st.write(f"Sentence {i+7}: Incorrect! Predicted Level: {predicted_level} ❌ (Expected Level: {level})")
             st.write(f"Example sentence for level {level}: {example_sentence}")
 
 # Button to reset the input
