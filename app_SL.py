@@ -168,6 +168,19 @@ if st.button("Submit"):
                 st.write(f"Sentence {i+7}: Incorrect! Predicted Level: {predicted_level} ❌ (Expected Level: {level})")
             st.write(f"Example sentence for level {level}: {example_sentence}")
 
+    level = get_level(score)
+    st.write(f"Your French level is: {level}")
+    st.markdown("""
+    Your French level is determined by the number of points you score out of 12.
+    - 1-2 points: A1
+    - 3-4 points: A2
+    - 5-6 points: B1
+    - 7-8 points: B2
+    - 9-10 points: C1
+    - 11-12 points: C2
+    """)
+    
+    
     # Display the French level
     st.subheader("Your French Level")
     st.write(f"Your French level based on your score is: **{level}**")
