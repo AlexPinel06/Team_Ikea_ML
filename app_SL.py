@@ -92,10 +92,27 @@ if submit_button and st.session_state["sentence"]:
     **Note:** These percentages are based on general estimates and information available on the distribution of language proficiency levels according to the CEFR in various educational and linguistic sources.
     """)
 
+    # YouTube videos for each level
+    youtube_videos = {
+        'A1': "https://www.youtube.com/watch?v=dQw4w9WgXcQ",  # Example link, replace with a funny video
+        'A2': "https://www.youtube.com/watch?v=dQw4w9WgXcQ",  # Example link, replace with a funny video
+        'B1': "https://www.youtube.com/watch?v=dQw4w9WgXcQ",  # Example link, replace with a funny video
+        'B2': "https://www.youtube.com/watch?v=dQw4w9WgXcQ",  # Example link, replace with a funny video
+        'C1': "https://www.youtube.com/watch?v=dQw4w9WgXcQ",  # Example link, replace with a funny video
+        'C2': "https://www.youtube.com/watch?v=dQw4w9WgXcQ"   # Example link, replace with a funny video
+    }
+
+    st.markdown("""
+    ---
+    For a comparison, here's an English speaker at your level:
+    """)
+
+    st.video(youtube_videos[difficulty])
+
 # Add a sidebar with additional information
 st.sidebar.title("About")
 st.sidebar.info("""
-This app uses a CamemBERT model to predict the difficulty level of sentences.
+This app uses a Logistic Regression model to predict the difficulty level of sentences.
 The model was trained on a dataset of sentences labeled with difficulty levels.
 """)
 st.sidebar.title("Instructions")
@@ -111,7 +128,7 @@ st.sidebar.info("""
 - A1 is the beginner level, while C2 is the mastery level.
 - Difficulty prediction can help in language learning by tailoring content to your level.
 - Natural Language Processing (NLP) techniques are used to analyze and understand human language.
-- CamemBERT is a state-of-the-art model for sequence classification tasks.
+- Logistic Regression is a simple yet powerful model for classification tasks.
 """)
 
 # Footer
