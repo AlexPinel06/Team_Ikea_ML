@@ -11,9 +11,8 @@ label_encoder = joblib.load('model2/label_encoder.pkl')
 
 # Function to reset the input
 def reset_input():
-    st.session_state["scores"] = []
-    st.session_state["random_questions"] = []
-    st.session_state["random_levels"] = []
+    st.session_state.clear()
+    st.experimental_rerun()
 
 # Function to calculate the score
 def calculate_score(user_answers, correct_answers):
@@ -126,8 +125,7 @@ if st.button("Submit"):
 
 # Button to reset the input
 if st.button("Reset"):
-    st.session_state.clear()
-    st.experimental_rerun()
+    reset_input()
 
 # Display the last three scores
 st.sidebar.title("Your Last 3 Scores")
