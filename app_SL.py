@@ -139,6 +139,26 @@ if st.button("Submit"):
     level = get_level(score)
     st.write(f"Your level is: {level}")
 
+    st.subheader("Your Answers")
+    for i, (user_answer, correct_answer) in enumerate(zip(user_answers[:6], correct_answers[:6])):
+        if user_answer == correct_answer:
+            st.write(f"Question {i+1}: Correct! {user_answer} ✅")
+        else:
+            st.write(f"Question {i+1}: Incorrect! {user_answer} ❌ (Correct: {correct_answer})")
+
+    st.subheader("Analysis of Your Written Sentences")
+    for i, (user_sentence, level) in enumerate(zip(user_written_sentences, random_levels)):
+        if user_sentence:
+            X_tfidf = vectorizer.transform([user_sentence])
+            prediction = model.predict(X_tfidf)
+            predicted_level = label_encoder.inverse_transform(prediction)[0]
+            example_sentence = example_sentences[level]
+            if predicted_level == level:
+                st.write(f"Sentence {i+7}: Correct! Predicted Level: {predicted_level} ✅")
+            else:
+                st.write(f"Sentence {i+7}: Incorrect! Predicted Level: {predicted_level} ❌ (Expected Level: {level})")
+            st.write(f"Example sentence for level {level}: {example_sentence}")
+
     # Display the predicted difficulty
     st.subheader("Prediction Result")
     st.write(f"The predicted difficulty level for the sentence is: **{level}**")
@@ -161,26 +181,6 @@ if st.button("Submit"):
     fig.patch.set_facecolor('#0e1117')  # Set the background color of the plot area
 
     st.pyplot(fig)
-
-    st.subheader("Your Answers")
-    for i, (user_answer, correct_answer) in enumerate(zip(user_answers[:6], correct_answers[:6])):
-        if user_answer == correct_answer:
-            st.write(f"Question {i+1}: Correct! {user_answer} ✅")
-        else:
-            st.write(f"Question {i+1}: Incorrect! {user_answer} ❌ (Correct: {correct_answer})")
-
-    st.subheader("Analysis of Your Written Sentences")
-    for i, (user_sentence, level) in enumerate(zip(user_written_sentences, random_levels)):
-        if user_sentence:
-            X_tfidf = vectorizer.transform([user_sentence])
-            prediction = model.predict(X_tfidf)
-            predicted_level = label_encoder.inverse_transform(prediction)[0]
-            example_sentence = example_sentences[level]
-            if predicted_level == level:
-                st.write(f"Sentence {i+7}: Correct! Predicted Level: {predicted_level} ✅")
-            else:
-                st.write(f"Sentence {i+7}: Incorrect! Predicted Level: {predicted_level} ❌ (Expected Level: {level})")
-            st.write(f"Example sentence for level {level}: {example_sentence}")
 
     # Display the corresponding YouTube video
     st.subheader("Watch a video for your level")
