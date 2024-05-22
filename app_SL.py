@@ -198,6 +198,32 @@ if st.button("Submit"):
     top_percent = 100 - better_than_percentage
     st.write(f"You belong to the top **{top_percent}%** of all users with this difficulty level.")
 
+       # Fun facts for each level
+    fun_facts = {
+        'A1': "Fun fact: Even Einstein had to start somewhere!",
+        'A2': "Fun fact: You're now better than most tourists!",
+        'B1': "Fun fact: You're officially conversational!",
+        'B2': "Fun fact: You can enjoy French movies without subtitles!",
+        'C1': "Fun fact: Your French is better than most expats!",
+        'C2': "Fun fact: You're at the mastery level, like a true Parisian!"
+    }
+    st.write(fun_facts[difficulty])
+
+    # Add source information
+    st.markdown("""
+    **Sources:**
+    - Portal (CECR)
+    - French Together – Learn French
+    - Service-Public
+    - Kwiziq French
+    - FluentU
+    - **Note:** These percentages are based on general estimates and information available on the distribution of language proficiency levels according to the CEFR in various educational and linguistic sources.
+    """)
+
+
+
+
+    
     # Display the corresponding YouTube video
     st.subheader("Watch a video for your level")
     st.markdown("""
