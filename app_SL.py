@@ -10,116 +10,87 @@ label_encoder = joblib.load('model2/label_encoder.pkl')
 
 # Function to reset the input
 def reset_input():
-    st.session_state["sentence"] = ""
+    st.session_state["scores"] = []
+
+# Function to calculate the score
+def calculate_score(user_answers, correct_answers):
+    return sum(1 for user, correct in zip(user_answers, correct_answers) if user == correct)
+
+# Function to update scores
+def update_scores(new_score):
+    if "scores" not in st.session_state:
+        st.session_state["scores"] = []
+    st.session_state["scores"].append(new_score)
+    if len(st.session_state["scores"]) > 3:
+        st.session_state["scores"].pop(0)
+
+# Initialize session state
+if "scores" not in st.session_state:
+    st.session_state["scores"] = []
 
 # App title and description
 st.title("Sentence Difficulty Prediction")
 st.markdown("""
 Welcome to the Sentence Difficulty Prediction app. 
-This tool predicts the difficulty level of a given French sentence using a pre-trained camemBERT model.
+This tool predicts the difficulty level of a given French sentence using a pre-trained model.
 """)
 
-# Check if 'sentence' exists in session_state
-if "sentence" not in st.session_state:
-    st.session_state["sentence"] = ""
+# Display the last three scores
+st.sidebar.title("Last 3 Scores")
+st.sidebar.write(st.session_state["scores"])
 
-# Create a form for the sentence input
-with st.form(key='sentence_form'):
-    sentence = st.text_input("Enter a sentence to predict its difficulty level:", key="sentence")
-    submit_button = st.form_submit_button(label='Submit')
+# Questions and answers (for simplicity, using predefined questions and correct answers)
+given_sentences = [
+    "Je suis étudiant.",
+    "Il fait beau aujourd'hui.",
+    "La théorie de la relativité est complexe.",
+    "Les ordinateurs quantiques sont l'avenir.",
+    "Il a couru un marathon hier."
+]
+correct_levels = ['A1', 'A2', 'B1', 'B2', 'C1']
+difficulty_levels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
+
+# User answers
+user_answers = []
+
+# First 5 questions: Select difficulty level for given sentences
+st.subheader("Select the difficulty level for the given sentences:")
+for i, sentence in enumerate(given_sentences):
+    user_answers.append(st.selectbox(f"Sentence {i+1}: {sentence}", options=difficulty_levels))
+
+# Last 5 questions: Write sentences for given difficulty levels
+st.subheader("Write a sentence for each given difficulty level:")
+for level in difficulty_levels[:5]:
+    user_sentence = st.text_input(f"Write a sentence for level {level}:")
+    if user_sentence:
+        X_tfidf = vectorizer.transform([user_sentence])
+        prediction = model.predict(X_tfidf)
+        predicted_level = label_encoder.inverse_transform(prediction)[0]
+        user_answers.append(predicted_level)
+
+# Calculate score
+if st.button("Submit"):
+    score = calculate_score(user_answers, correct_levels + correct_levels[:5])
+    update_scores(score)
+    st.write(f"Your score is: {score}/10")
+    st.experimental_rerun()
 
 # Button to reset the input
 if st.button("Reset"):
     st.session_state.clear()
     st.experimental_rerun()
 
-# Perform prediction
-if submit_button and st.session_state["sentence"]:
-    sentence = st.session_state["sentence"]
-    X_tfidf = vectorizer.transform([sentence])
-    prediction = model.predict(X_tfidf)
-    difficulty = label_encoder.inverse_transform(prediction)[0]
-
-    # Display the predicted difficulty
-    st.subheader("Prediction Result")
-    st.write(f"The predicted difficulty level for the sentence is: **{difficulty}**")
-
-    # Estimated data for illustration
-    difficulty_levels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
-    counts = [30, 25, 20, 15, 7, 3]  # Estimated percentage for each difficulty level
-
-    # Display a pie chart of difficulty levels
-    st.subheader("Estimated Distribution of French Learners by Competency Level")
-    fig, ax = plt.subplots(facecolor='#0e1117')  # Set the background color of the figure
-    wedges, texts, autotexts = ax.pie(counts, labels=difficulty_levels, autopct='%1.1f%%', startangle=90, colors=plt.cm.Paired.colors)
-    ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-
-    # Customize the appearance
-    for text in texts:
-        text.set_color('white')
-    for autotext in autotexts:
-        autotext.set_color('white')
-    fig.patch.set_facecolor('#0e1117')  # Set the background color of the plot area
-
-    st.pyplot(fig)
-
-    # Calculate the ranking
-    difficulty_index = difficulty_levels.index(difficulty)
-    better_than_percentage = sum(counts[:difficulty_index])
-    top_percent = 100 - better_than_percentage
-    st.subheader("Your Ranking")
-    st.write(f"You belong to the top **{top_percent}%** of all users with this difficulty level.")
-
-    # Fun facts for each level
-    fun_facts = {
-        'A1': "Fun fact: Even Einstein had to start somewhere!",
-        'A2': "Fun fact: You're now better than most tourists!",
-        'B1': "Fun fact: You're officially conversational!",
-        'B2': "Fun fact: You can enjoy French movies without subtitles!",
-        'C1': "Fun fact: Your French is better than most expats!",
-        'C2': "Fun fact: You're at the mastery level, like a true Parisian!"
-    }
-    st.write(fun_facts[difficulty])
-
-    # Add source information
-    st.markdown("""
-    **Sources:**
-    - Portal (CECR)
-    - French Together – Learn French
-    - Service-Public
-    - Kwiziq French
-    - FluentU
-    **Note:** These percentages are based on general estimates and information available on the distribution of language proficiency levels according to the CEFR in various educational and linguistic sources.
-    """)
-
-    # YouTube videos for each level
-    youtube_videos = {
-        'A1': "https://www.youtube.com/watch?v=4w6REQGQ89E",  # Example link, replace with a funny video
-        'A2': "https://www.youtube.com/watch?v=dh7O5BV47lU",  # Example link, replace with a funny video
-        'B1': "https://www.youtube.com/watch?v=CwXjunivNbk",  # Example link, replace with a funny video
-        'B2': "https://www.youtube.com/watch?v=8J76QTENZv4",  # Example link, replace with a funny video
-        'C1': "https://www.youtube.com/shorts/4jZE6y-uGJQ",  # Example link, replace with a funny video
-        'C2': "https://www.youtube.com/watch?v=rRgTKrp1hVc"   # Example link, replace with a funny video
-    }
-
-    st.markdown("""
-    ---
-    For a comparison, here's an English speaker at your level(of course these are jokes to be taken in the second degree. they are memes very famous on the internet):
-    """)
-
-    st.video(youtube_videos[difficulty])
-
 # Add a sidebar with additional information
 st.sidebar.title("About")
 st.sidebar.info("""
-This app uses a camemBERT model to predict the difficulty level of sentences.
+This app uses a pre-trained model to predict the difficulty level of sentences.
 The model was trained on a dataset of sentences labeled with difficulty levels.
 """)
 st.sidebar.title("Instructions")
 st.sidebar.info("""
-1. Enter a sentence in the text box.
-2. The app will predict the difficulty level of the sentence.
-3. View the distribution of difficulty levels and see where you rank.
+1. Select the difficulty level for each of the first 5 sentences.
+2. Write a sentence for each of the last 5 difficulty levels.
+3. Submit your answers to see your score.
 """)
 
 # Add extra information in the sidebar
@@ -128,7 +99,7 @@ st.sidebar.info("""
 - A1 is the beginner level, while C2 is the mastery level.
 - Difficulty prediction can help in language learning by tailoring content to your level.
 - Natural Language Processing (NLP) techniques are used to analyze and understand human language.
-- camemBERT is a state-of-the-art model for sequence classification tasks.
+- The model is a state-of-the-art model for sequence classification tasks.
 """)
 
 # Footer
