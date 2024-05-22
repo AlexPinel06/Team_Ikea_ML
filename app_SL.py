@@ -198,7 +198,7 @@ if st.button("Submit"):
     top_percent = 100 - better_than_percentage
     st.write(f"You belong to the top **{top_percent}%** of all users with this difficulty level.")
 
-       # Fun facts for each level
+    # Fun facts for each level
     fun_facts = {
         'A1': "Fun fact: Even Einstein had to start somewhere!",
         'A2': "Fun fact: You're now better than most tourists!",
