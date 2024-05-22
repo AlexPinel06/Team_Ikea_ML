@@ -104,7 +104,7 @@ if submit_button and st.session_state["sentence"]:
 
     st.markdown("""
     ---
-    For a comparison, here's an English speaker at your level:
+    For a comparison, here's an English speaker at your level(of course these are jokes to be taken in the second degree. they are memes very famous on the internet):
     """)
 
     st.video(youtube_videos[difficulty])
