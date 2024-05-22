@@ -137,7 +137,16 @@ if st.button("Submit"):
     st.write(f"Your score is: {score}/12")
     
     level = get_level(score)
-    st.write(f"Your level is: {level}")
+    st.write(f"Your French level is: {level}")
+    st.markdown("""
+    Your French level is determined by the number of points you score out of 12.
+    - 1-2 points: A1
+    - 3-4 points: A2
+    - 5-6 points: B1
+    - 7-8 points: B2
+    - 9-10 points: C1
+    - 11-12 points: C2
+    """)
 
     st.subheader("Your Answers")
     for i, (user_answer, correct_answer) in enumerate(zip(user_answers[:6], correct_answers[:6])):
@@ -160,7 +169,7 @@ if st.button("Submit"):
             st.write(f"Example sentence for level {level}: {example_sentence}")
 
     # Display the predicted difficulty
-    st.subheader("Prediction Result")
+    st.subheader("Your French Level")
     st.write(f"The predicted difficulty level for the sentence is: **{level}**")
 
     # Estimated data for illustration
@@ -182,8 +191,16 @@ if st.button("Submit"):
 
     st.pyplot(fig)
 
+    st.subheader("Your Ranking")
+    better_than_percentage = sum(counts[:difficulty_levels.index(level)])
+    top_percent = 100 - better_than_percentage
+    st.write(f"You belong to the top **{top_percent}%** of all users with this difficulty level.")
+
     # Display the corresponding YouTube video
     st.subheader("Watch a video for your level")
+    st.markdown("""
+    For a comparison, here's an English speaker at your level (of course, these are jokes to be taken in the second degree. They are memes very famous on the internet):
+    """)
     st.video(youtube_videos[level])
 
 # Button to reset the input
