@@ -95,7 +95,7 @@ if submit_button and st.session_state["sentence"]:
     # YouTube videos for each level
     youtube_videos = {
         'A1': "https://www.youtube.com/watch?v=4w6REQGQ89E",  # Example link, replace with a funny video
-        'A2': "https://www.youtube.com/watch?v=dh7O5BV47lUhttps://www.youtube.com/shorts/4jZE6y-uGJQ",  # Example link, replace with a funny video
+        'A2': "https://www.youtube.com/watch?v=dh7O5BV47lU",  # Example link, replace with a funny video
         'B1': "https://www.youtube.com/watch?v=CwXjunivNbk",  # Example link, replace with a funny video
         'B2': "https://www.youtube.com/watch?v=8J76QTENZv4",  # Example link, replace with a funny video
         'C1': "https://www.youtube.com/shorts/4jZE6y-uGJQ",  # Example link, replace with a funny video
