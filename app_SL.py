@@ -1,11 +1,14 @@
 import streamlit as st
 import joblib
-import matplotlib.pyplot as plt
+import torch
+from transformers import CamembertTokenizer, CamembertForSequenceClassification
 import numpy as np
 
-# Load the model, vectorizer, and label encoder
-model = joblib.load('model2/logistic_regression_model.pkl')
-vectorizer = joblib.load('model2/tfidf_vectorizer.pkl')
+# Load the model, tokenizer, and label encoder
+model = CamembertForSequenceClassification.from_pretrained('camembert-base')
+model.load_state_dict(torch.load('model/trained_model.pt'))
+model.eval()
+tokenizer = CamembertTokenizer.from_pretrained('camembert-base')
 label_encoder = joblib.load('model2/label_encoder.pkl')
 
 # Function to reset the input
@@ -16,7 +19,7 @@ def reset_input():
 st.title("Sentence Difficulty Prediction")
 st.markdown("""
 Welcome to the Sentence Difficulty Prediction app. 
-This tool predicts the difficulty level of a given french sentence using a pre-trained machine learning model.
+This tool predicts the difficulty level of a given French sentence using a pre-trained CamemBERT model.
 """)
 
 # Check if 'sentence' exists in session_state
@@ -36,9 +39,11 @@ if st.button("Reset"):
 # Perform prediction
 if submit_button and st.session_state["sentence"]:
     sentence = st.session_state["sentence"]
-    X_tfidf = vectorizer.transform([sentence])
-    prediction = model.predict(X_tfidf)
-    difficulty = label_encoder.inverse_transform(prediction)[0]
+    inputs = tokenizer(sentence, return_tensors='pt', padding='max_length', truncation=True, max_length=128)
+    with torch.no_grad():
+        outputs = model(**inputs)
+    prediction = torch.argmax(outputs.logits, axis=-1).item()
+    difficulty = label_encoder.inverse_transform([prediction])[0]
 
     # Display the predicted difficulty
     st.subheader("Prediction Result")
@@ -72,12 +77,12 @@ if submit_button and st.session_state["sentence"]:
 
     # Fun facts for each level
     fun_facts = {
-        'A1': "Fun fact: Even Einstein had to start somewhere!",
-        'A2': "Fun fact: You're now better than most tourists!",
-        'B1': "Fun fact: You're officially conversational!",
-        'B2': "Fun fact: You can enjoy French movies without subtitles!",
-        'C1': "Fun fact: Your French is better than most expats!",
-        'C2': "Fun fact: You're at the mastery level, like a true Parisian!"
+        'A1': "Fun fact: Even Einstein had to start somewhere! This model uses CamemBERT for text representation.",
+        'A2': "Fun fact: You're now better than most tourists! Our CamemBERT model is powerful and efficient.",
+        'B1': "Fun fact: You're officially conversational! The model was trained on a diverse set of sentences.",
+        'B2': "Fun fact: You can enjoy French movies without subtitles! CamemBERT excels in text classification.",
+        'C1': "Fun fact: Your French is better than most expats! This model can handle complex language tasks.",
+        'C2': "Fun fact: You're at the mastery level, like a true Parisian! CamemBERT helps in advanced language studies."
     }
     st.write(fun_facts[difficulty])
 
@@ -95,7 +100,7 @@ if submit_button and st.session_state["sentence"]:
 # Add a sidebar with additional information
 st.sidebar.title("About")
 st.sidebar.info("""
-This app uses a Logistic Regression model to predict the difficulty level of sentences.
+This app uses a CamemBERT model to predict the difficulty level of sentences.
 The model was trained on a dataset of sentences labeled with difficulty levels.
 """)
 st.sidebar.title("Instructions")
@@ -111,7 +116,7 @@ st.sidebar.info("""
 - A1 is the beginner level, while C2 is the mastery level.
 - Difficulty prediction can help in language learning by tailoring content to your level.
 - Natural Language Processing (NLP) techniques are used to analyze and understand human language.
-- Logistic Regression is a simple yet powerful model for classification tasks.
+- CamemBERT is a state-of-the-art model for sequence classification tasks.
 """)
 
 # Footer
