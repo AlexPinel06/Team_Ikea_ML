@@ -1,7 +1,9 @@
 streamlit
-scikit-learn
+torch
+transformers
 joblib
 matplotlib
 numpy
-torch
-transformers
+pandas
+scikit-learn
+nltk
