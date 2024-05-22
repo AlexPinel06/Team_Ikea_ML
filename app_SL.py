@@ -22,7 +22,7 @@ def update_scores(new_score):
         st.session_state["scores"] = []
     st.session_state["scores"].append(new_score)
     if len(st.session_state["scores"]) > 3:
-        st.session_state["scores"].pop(0)
+        st.session_state["scores"] = st.session_state["scores"][-3:]
 
 # Initialize session state
 if "scores" not in st.session_state:
@@ -36,8 +36,9 @@ This tool predicts the difficulty level of a given French sentence using a pre-t
 """)
 
 # Display the last three scores
-st.sidebar.title("Last 3 Scores")
-st.sidebar.write(st.session_state["scores"])
+st.sidebar.title("Your Last 3 Scores")
+for score in st.session_state["scores"]:
+    st.sidebar.write(f"Score: {score}/10")
 
 # Questions and answers (for simplicity, using predefined questions and correct answers)
 given_sentences = [
@@ -52,6 +53,7 @@ difficulty_levels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
 
 # User answers
 user_answers = []
+correct_answers = correct_levels + correct_levels[:5]
 
 # First 5 questions: Select difficulty level for given sentences
 st.subheader("Select the difficulty level for the given sentences:")
@@ -70,10 +72,16 @@ for level in difficulty_levels[:5]:
 
 # Calculate score
 if st.button("Submit"):
-    score = calculate_score(user_answers, correct_levels + correct_levels[:5])
+    score = calculate_score(user_answers, correct_answers)
     update_scores(score)
     st.write(f"Your score is: {score}/10")
-    st.experimental_rerun()
+    
+    st.subheader("Your Answers")
+    for i, (user_answer, correct_answer) in enumerate(zip(user_answers, correct_answers)):
+        if user_answer == correct_answer:
+            st.write(f"Question {i+1}: Correct! {user_answer} ✅")
+        else:
+            st.write(f"Question {i+1}: Incorrect! {user_answer} ❌ (Correct: {correct_answer})")
 
 # Button to reset the input
 if st.button("Reset"):
